@@ -14,7 +14,7 @@ app.get('/api/chat', async (req, res) => {
       return res.status(400).json({ error: 'Both "text" and "characterId" are required query parameters.' });
     }
 
-    await characterAI.authenticateWithToken('ca9753a451e4563e118350d99c60a0399be1ff8a');
+    await characterAI.authenticateAsGuest();
 
     const chat = await characterAI.createOrContinueChat(characterId);
     const response = await chat.sendAndAwaitResponse(text, true);
