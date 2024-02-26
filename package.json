@@ -1,14 +1,16 @@
 {
-  "name": "character-ai-server",
+  "name": "paste-server",
   "version": "1.0.0",
-  "description": "Express server with CharacterAI API endpoint",
+  "description": "Simple paste server with Express",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.17.1",
-    "node_characterai": "git+https://github.com/Primi373-creator/node_characterai.git"
+    "mongodb": "^4.0.0",
+    "axios": "^0.24.0",
+    "uuid": "^8.3.2"
   },
   "license": "MIT"
 }
