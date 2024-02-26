@@ -25,20 +25,23 @@ async function connectToDatabase() {
 app.use(express.json());
 
 // Endpoint to create a new paste
-app.get('/paste', async (req, res) => {
-  const { action, content, sessionId } = req.query;
+app.post('/paste', async (req, res) => {
+  const { content } = req.body;
 
-  if (action === 'create' && content && sessionId) {
-    const id = `Xlicon_${uuidv4()}`;
+  if (content) {
+    const id = `alpha~${uuidv4()}`;
+    const sessionId = uuidv4();
     const prefixedContent = `${id}_${sessionId}_${content}`;
 
     try {
       await pasteDB.collection('pastes').insertOne({
         _id: id,
         content: prefixedContent,
+        sessionId,
       });
       res.json({
         id,
+        sessionId,
       });
     } catch (err) {
       console.error('Error creating paste:', err.message);
@@ -48,7 +51,7 @@ app.get('/paste', async (req, res) => {
     }
   } else {
     res.status(400).json({
-      error: 'Invalid request. Please provide action=create, content, and sessionId parameters.',
+      error: 'Invalid request. Please provide content in the request body.',
     });
   }
 });
@@ -59,7 +62,7 @@ app.get('/get-paste/:sessionId', async (req, res) => {
 
   try {
     const userPastes = await pasteDB.collection('pastes').find({
-      content: { $regex: `_${sessionId}_` },
+      sessionId,
     }).toArray();
 
     if (userPastes.length > 0) {
