@@ -1,0 +1,14 @@
+{
+  "name": "character-ai-server",
+  "version": "1.0.0",
+  "description": "Express server with CharacterAI API endpoint",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "node_characterai": "git+https://github.com/Primi373-creator/node_characterai.git"
+  },
+  "license": "MIT"
+}
