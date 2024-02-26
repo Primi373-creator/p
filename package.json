@@ -2,9 +2,9 @@
   "name": "character-ai-server",
   "version": "1.0.0",
   "description": "Express server with CharacterAI API endpoint",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.17.1",
