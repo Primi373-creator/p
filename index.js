@@ -1,31 +1,87 @@
 const express = require('express');
-const CharacterAI = require('node_characterai');
+const { v4: uuidv4 } = require('uuid');
+const MongoClient = require('mongodb').MongoClient;
 
 const app = express();
-const port = 3000; // You can use any port you prefer
+const PORT = process.env.PORT || 3000;
 
-const characterAI = new CharacterAI();
+const PASTE_DB_URI = 'mongodb+srv://pobasuyi69:9UW3Yra6HZFUCT0B@cluster0.lum7yrw.mongodb.net/?retryWrites=true&w=majority';
+const PASTE_DB_NAME = 'pasteDB';
 
-app.get('/api/chat', async (req, res) => {
+let pasteDB;
+
+async function connectToDatabase() {
   try {
-    const { text, characterId } = req.query;
+    const pasteClient = await MongoClient.connect(PASTE_DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    pasteDB = pasteClient.db(PASTE_DB_NAME);
 
-    if (!text || !characterId) {
-      return res.status(400).json({ error: 'Both "text" and "characterId" are required query parameters.' });
+    console.log('Connected to the database');
+  } catch (err) {
+    console.error('Error connecting to the database:', err.message);
+    process.exit(1);
+  }
+}
+
+app.use(express.json());
+
+// Endpoint to create a new paste
+app.get('/paste', async (req, res) => {
+  const { action, content, sessionId } = req.query;
+
+  if (action === 'create' && content && sessionId) {
+    const id = `Xlicon_${uuidv4()}`;
+    const prefixedContent = `${id}_${sessionId}_${content}`;
+
+    try {
+      await pasteDB.collection('pastes').insertOne({
+        _id: id,
+        content: prefixedContent,
+      });
+      res.json({
+        id,
+      });
+    } catch (err) {
+      console.error('Error creating paste:', err.message);
+      res.status(500).json({
+        error: 'Internal server error',
+      });
     }
-
-    await characterAI.authenticateWithToken('ca9753a451e4563e118350d99c60a0399be1ff8a');
-
-    const chat = await characterAI.createOrContinueChat(characterId);
-    const response = await chat.sendAndAwaitResponse(text, true);
-
-    res.json({ text: response.text });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+  } else {
+    res.status(400).json({
+      error: 'Invalid request. Please provide action=create, content, and sessionId parameters.',
+    });
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// Endpoint to retrieve stored paste using session ID
+app.get('/get-paste/:sessionId', async (req, res) => {
+  const { sessionId } = req.params;
+
+  try {
+    const userPastes = await pasteDB.collection('pastes').find({
+      content: { $regex: `_${sessionId}_` },
+    }).toArray();
+
+    if (userPastes.length > 0) {
+      res.json({
+        pastes: userPastes.map(paste => paste._id),
+      });
+    } else {
+      res.status(404).json({
+        error: 'No pastes found for the provided session ID.',
+      });
+    }
+  } catch (err) {
+    console.error('Error retrieving pastes:', err.message);
+    res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+});
+
+// Connect to the database and start the server
+connectToDatabase().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
