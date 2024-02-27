@@ -5,86 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpha-md</title>
     <link rel="stylesheet" href="styles.css">
-     <style>
-         body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0; /* Added to remove default margin */
+        }
 
-.loader-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.loader {
-    width: 200px;
-    height: 200px;
-    border: 10px solid #f3f3f3;
-    border-top: 10px solid #3498db;
-    border-radius: 50%;
-    animation: spin 2s linear infinite;
-}
+        .loader {
+            width: 200px;
+            height: 200px;
+            border: 10px solid #f3f3f3;
+            border-top: 10px solid #3498db;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
 
-.loader-text {
-    text-align: center;
-    margin-top: 20px;
-}
+        .loader-text {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-.section-text-title {
-    font-size: 26px;
-    font-family: 'Oswald';
-    font-weight: 700;
-}
+        .section-text-title {
+            font-size: 26px;
+            font-family: 'Oswald', sans-serif; /* Added fallback sans-serif */
+            font-weight: 700;
+        }
 
-.section-text-caption {
-    padding-top: 33px;
-    font-size: 10px;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 300;
-}
+        .section-text-caption {
+            padding-top: 33px;
+            font-size: 14px; /* Increased font size for better visibility */
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 300;
+        }
 
-.form-container {
-    position: relative;
-    top: -20px;
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-    transition: transform 0.3s ease-in-out;
-    transform: translateY(50px);
-    opacity: 0;
-}
+        .form-container {
+            position: relative;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: translateY(50px);
+            opacity: 0;
+            margin: auto; /* Center the form container */
+            margin-top: 50px; /* Adjusted margin-top for better positioning */
+        }
 
-.form-container.loaded {
-    transform: translateY(0);
-    opacity: 1;
-}
+        .form-container.loaded {
+            transform: translateY(0);
+            opacity: 1;
+        }
 
-.warning {
-    color: red;
-    font-size: 14px;
-    margin-bottom: 1rem;
-}
+        .warning {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 1rem;
+        }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-     </style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="loader-wrapper">
@@ -94,7 +96,7 @@
         </div>
     </div>
     <div class="form-container">
-        <h2>Clear alpha's database</h2>
+        <h2>Clear Alpha's Database</h2>
         <p class="warning">Warning: Clearing the database will result in all users losing their files.</p>
         <form action="/admin/clear-paste" method="post">
             <label for="accessKey">Access Key:</label>
@@ -104,11 +106,11 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        const formContainer = document.querySelector('.form-container');
-        formContainer.classList.add('loaded');
-    }, 3000);
-});
+            setTimeout(() => {
+                const formContainer = document.querySelector('.form-container');
+                formContainer.classList.add('loaded');
+            }, 3000);
+        });
     </script>
 </body>
 </html>
