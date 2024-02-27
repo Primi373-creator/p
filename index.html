@@ -5,71 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpha-md</title>
     <link rel="stylesheet" href="styles.css">
-       <style>
+    <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
+            background-color: #fff; /* White background */
+            margin: 0; /* Added to remove default margin */
+        }
+
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 999;
             display: flex;
+            flex-direction: column; /* Adjusted to column layout */
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+        }
+
+        .loader {
+            width: 40px; /* Reduced loader size */
+            height: 40px; /* Reduced loader size */
+            border: 4px solid #fff; /* White border for loader */
+            border-top: 4px solid #808080; /* Grey border for loader */
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        .loader-text {
+            text-align: center;
+            margin-top: 10px; /* Adjusted margin-top for spacing */
+            color: #fff; /* White color for text */
+        }
+
+        .section-text-title {
+            font-size: 26px;
+            font-family: 'Oswald', sans-serif; /* Added fallback sans-serif */
+            font-weight: 700;
+        }
+
+        .section-text-caption {
+            padding-top: 33px;
+            font-size: 14px; /* Increased font size for better visibility */
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 300;
         }
 
         .form-container {
+            position: relative;
             background-color: #fff;
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
+            transition: background-color 0.3s ease-in-out; /* Adjusted to only affect the background-color */
+            margin: auto; /* Center the form container */
+            margin-top: 50px; /* Adjusted margin-top for better positioning */
         }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
+        .form-container:hover {
+            background-color: #808080; /* Grey background on hover */
         }
 
-        input {
-            width: 100%;
-            padding: 0.5rem;
+        .form-container.loaded {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .warning {
+            display: none;
+            color: red;
+            font-size: 14px;
             margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
         }
 
-        button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
-        button:hover {
-            background-color: #0056b3;
+        /* Add styles for button and loader on hover */
+        .form-container button:hover {
+            background-color: #808080; /* Grey background on hover */
+            color: white;
+        }
+
+        .loader-wrapper:hover {
+            background-color: #808080; /* Grey background on loader hover */
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
+    <div class="loader-wrapper">
+        <div class="loader"></div>
+        <div class="loader-text section-text-title">Processing...</div>
+        <div class="loader-text section-text-caption">Please wait...</div>
+    </div>
+    <div class="form-container" onclick="showWarning()">
         <h2>Clear Alpha's Database</h2>
-        <p class="warning">Warning: Clearing the database will result in all users losing their files.</p>
-        <form action="/admin/clear-paste" method="post">
+        <p class="warning">Warning: Clearing the database will result in all users losing their files. Click again to confirm.</p>
+        <form action="/admin/clear-paste" method="post" onsubmit="showLoader(event)">
             <label for="accessKey">Access Key:</label>
             <input type="text" id="accessKey" name="accessKey" required>
             <button type="submit">Clear Database</button>
         </form>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        function showLoader(event) {
+            event.preventDefault();
+            const loaderWrapper = document.querySelector('.loader-wrapper');
+            const formContainer = document.querySelector('.form-container');
+            const loaderText = document.querySelectorAll('.loader-text');
+
+            loaderWrapper.style.display = 'flex';
+
             setTimeout(() => {
-                const formContainer = document.querySelector('.form-container');
+                loaderWrapper.style.display = 'none';
                 formContainer.classList.add('loaded');
+                loaderText.forEach(text => {
+                    text.style.display = 'none';
+                });
             }, 3000);
-        });
+        }
+
+        function showWarning() {
+            const warning = document.querySelector('.warning');
+            warning.style.display = 'block';
+        }
     </script>
 </body>
 </html>
