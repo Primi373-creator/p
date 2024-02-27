@@ -20,36 +20,7 @@ async function connectToDatabase() {
 
 app.use(express.json());
 
-// Endpoint to create a new paste
-app.post('/paste', async (req, res) => {
-  const { content } = req.body;
-
-  if (content) {
-    const id = `alpha~${uuidv4()}`;
-
-    try {
-      await pasteDB.collection('pastes').insertOne({
-        _id: id,
-        content,
-      });
-      res.json({
-        id,
-      });
-    } catch (err) {
-      console.error('Error creating paste:', err.message);
-      res.status(500).json({
-        error: 'Internal server error',
-      });
-    }
-  } else {
-    res.status(400).json({
-      error: 'Invalid request. Please provide content in the request body.',
-    });
-  }
-});
-
-// Endpoint to retrieve paste using ID
-app.get('/get-paste/:pasteId', async (req, res) => {
+app.get('/admin/get-paste/:pasteId', async (req, res) => {
   const { pasteId } = req.params;
 
   try {
@@ -75,8 +46,7 @@ app.get('/get-paste/:pasteId', async (req, res) => {
   }
 });
 
-// Endpoint to create and retrieve paste using URL parameters
-app.get('/pastes', async (req, res) => {
+app.get('/admin/paste', async (req, res) => {
   const { content } = req.query;
 
   if (content) {
@@ -102,8 +72,6 @@ app.get('/pastes', async (req, res) => {
     });
   }
 });
-
-// Connect to the database and start the server
 connectToDatabase().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
