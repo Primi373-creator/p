@@ -20,7 +20,31 @@ async function connectToDatabase() {
 }
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/admin/clear-paste/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+// Handle POST request to clear the database
+app.post('/admin/clear-paste/', (req, res) => {
+  const { accessKey } = req.body;
+
+  if (accessKey === ACCESS_KEY) {
+    // Clear the entire database
+    pasteDB.collection('pastes').deleteMany({})
+      .then(() => {
+        console.log('Database cleared successfully.');
+        res.send('Database cleared successfully.');
+      })
+      .catch((error) => {
+        console.error('Error clearing database:', error.message);
+        res.status(500).send('Internal server error');
+      });
+  } else {
+    res.status(401).send('Unauthorized');
+  }
+});
 // Middleware to check access key
 function checkAccessKey(req, res, next) {
   const providedKey = req.query.apikey;
