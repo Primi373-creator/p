@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const PASTE_DB_URI = 'mongodb+srv://your_username:your_password@cluster0.lum7yrw.mongodb.net/?retryWrites=true&w=majority';
+const PASTE_DB_URI = 'mongodb+srv://pobasuyi69:9UW3Yra6HZFUCT0B@cluster0.lum7yrw.mongodb.net/?retryWrites=true&w=majority';
 const PASTE_DB_NAME = 'pasteDB';
 
 let pasteDB;
