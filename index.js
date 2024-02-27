@@ -1,5 +1,6 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
+const bodyParser = require('body-parser'); 
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
 const PORT = process.env.PORT || 3000;
