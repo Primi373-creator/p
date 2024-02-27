@@ -1,17 +1,20 @@
 // pasteController.js
 
 const { v4: uuidv4 } = require('uuid');
-const { pasteDB } = require('./db');
+const { connectToDatabase, pasteDB } = require('./db');
 
 async function createPaste(req, res) {
   const { content } = req.query;
 
   if (content) {
     // Create a unique ID for the paste
-    const id = `Xlicon_${uuidv4()}`;
+    const id = `alpha_${uuidv4()}`;
     const prefixedContent = `${id}_${content}`;
 
     try {
+      // Ensure pasteDB is initialized
+      await connectToDatabase();
+
       await pasteDB.collection('pastes').insertOne({
         _id: id,
         content: prefixedContent,
@@ -35,6 +38,9 @@ async function getPastes(req, res) {
   const { pasteId } = req.params;
 
   try {
+    // Ensure pasteDB is initialized
+    await connectToDatabase();
+
     const paste = await pasteDB.collection('pastes').findOne({ _id: pasteId });
 
     if (paste) {
