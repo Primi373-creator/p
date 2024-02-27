@@ -16,4 +16,4 @@ async function connectToDatabase() {
   }
 }
 
-module.exports = { pasteDB, connectToDatabase };
+module.exports = { connectToDatabase, pasteDB };
