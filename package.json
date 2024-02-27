@@ -10,12 +10,7 @@
     "express": "^4.17.1",
     "mongodb": "^4.0.0",
     "axios": "^0.24.0",
-    "uuid": "^8.3.2",
-     "@hapi/boom": "^10.0.1",
-      "@whiskeysockets/baileys": "6.5.0",
-      "fs-extra": "latest",
-      "pino": "^8.1.0",
-    "qrcode": "latest"
+    "uuid": "^8.3.2"
   },
   "license": "MIT"
 }
