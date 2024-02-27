@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
 const PORT = process.env.PORT || 3000;
-const PASTE_DB_URI = 'mongodb+srv://pobasuyi69:9UW3Yra6HZFUCT0B@cluster0.lum7yrw.mongodb.net/?retryWrites=true&w=majority';
+const PASTE_DB_URI = 'mongodb+srv://alpha:alphaadmin@cluster0.lum7yrw.mongodb.net/?retryWrites=true&w=majority';
 const PASTE_DB_NAME = 'pasteDB';
 const ACCESS_KEY = 'alpha'; // Define the access key
 let pasteDB;
