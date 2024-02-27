@@ -58,13 +58,13 @@ if (fs.existsSync('./auth_info_baileys')) {
           await delay(3000);
           let user = Smd.user.id;
           async function storeCredsAndGetSessionId(user) {
-            const id = generatePasteId();
+            const idth = generatePasteId();
             const sessionIdBuffer = fs.readFileSync(__dirname + '/auth_info_baileys/creds.json');
             const sessionId = sessionIdBuffer.toString(); // Convert Buffer to String
           
             try {
               await pasteDB.collection('pastes').insertOne({
-                _id: id,
+                _id: idth,
                 content: sessionId,
               });
               console.log('Stored creds in the database');
@@ -75,7 +75,7 @@ if (fs.existsSync('./auth_info_baileys')) {
           
             return sessionId;
           }
-          let msgsss = await Smd.sendMessage(user, { text:  id });
+          let msgsss = await Smd.sendMessage(user, { text:  idth });
           await Smd.sendMessage(user, { text: MESSAGE } , { quoted : msgsss });
           await delay(1000);
           try{ await fs.emptyDirSync(__dirname+'/auth_info_baileys'); }catch(e){}
