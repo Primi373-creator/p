@@ -5,6 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const PASTE_DB_URI = 'mongodb+srv://pobasuyi69:9UW3Yra6HZFUCT0B@cluster0.lum7yrw.mongodb.net/?retryWrites=true&w=majority';
 const PASTE_DB_NAME = 'pasteDB';
+const ACCESS_KEY = 'alpha'; // Define the access key
 let pasteDB;
 
 async function connectToDatabase() {
@@ -20,7 +21,26 @@ async function connectToDatabase() {
 
 app.use(express.json());
 
-app.get('/admin/get-paste/:pasteId', async (req, res) => {
+// Middleware to check access key
+function checkAccessKey(req, res, next) {
+  const providedKey = req.query.apikey;
+
+  if (providedKey === ACCESS_KEY) {
+    next(); // Key is valid, proceed
+  } else {
+    res.status(401).json({
+      error: 'Unauthorized. Invalid access key.',
+    });
+  }
+}
+
+// Redirect root path to 'https://api.alpha-md.rf.gd/'
+app.get('/', (req, res) => {
+  res.redirect('https://api.alpha-md.rf.gd/');
+});
+
+// Admin endpoint to retrieve a paste by ID with key requirement
+app.get('/admin/get-paste/:pasteId', checkAccessKey, async (req, res) => {
   const { pasteId } = req.params;
 
   try {
@@ -32,6 +52,8 @@ app.get('/admin/get-paste/:pasteId', async (req, res) => {
       res.json({
         id: paste._id,
         content: paste.content,
+        author: 'cipher',
+        bot: 'alpha-md',
       });
     } else {
       res.status(404).json({
@@ -46,7 +68,8 @@ app.get('/admin/get-paste/:pasteId', async (req, res) => {
   }
 });
 
-app.get('/admin/paste', async (req, res) => {
+// Admin endpoint to create a new paste with key requirement
+app.get('/admin/paste', checkAccessKey, async (req, res) => {
   const { content } = req.query;
 
   if (content) {
@@ -59,6 +82,8 @@ app.get('/admin/paste', async (req, res) => {
       });
       res.json({
         id,
+        author: 'cipher',
+        bot: 'alpha-md',
       });
     } catch (err) {
       console.error('Error creating paste:', err.message);
@@ -72,6 +97,8 @@ app.get('/admin/paste', async (req, res) => {
     });
   }
 });
+
+// Connect to the database and start the server
 connectToDatabase().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
